@@ -8,9 +8,9 @@ type User struct {
 }
 
 type UserService interface { 
-
+	ListUsers() ([]User, error)
 }
 
 type UserStore interface {
-	
+	UserService
 }

@@ -2,7 +2,6 @@ package user
 
 import "github.com/gbataglini/journi-backend/domain"
 
-
 type store struct {
 	users []domain.User
 }
@@ -10,10 +9,10 @@ type store struct {
 func NewStore() domain.UserStore {
 	return &store{
 		users: []domain.User{{
-			ID: "1", 
-			FirstName: "Ducko", 
-			LastName: "Quackins", 
-			Email: "ducko@qua.ck",
+			ID:        "1",
+			FirstName: "Ducko",
+			LastName:  "Quackins",
+			Email:     "ducko@qua.ck",
 		}},
 	}
 }

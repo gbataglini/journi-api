@@ -4,8 +4,8 @@ CREATE TABLE user_details (
     last_name VARCHAR (255) NOT NULL, 
     email VARCHAR (255) NOT NULL, 
     date_of_birth DATE, 
-    created_at TIMESTAMP, 
-    modified_at TIMESTAMP
+    created_at TIMESTAMP DEFAULT NOW(), 
+    modified_at TIMESTAMP DEFAULT NULL
 ); 
 
 
@@ -14,9 +14,9 @@ CREATE TABLE destinations (
     user_id INT NOT NULL REFERENCES user_details (id), 
     city VARCHAR (255) NOT NULL, 
     country VARCHAR (255) NOT NULL,
-    visited BOOLEAN, 
-    created_at TIMESTAMP, 
-    modified_at TIMESTAMP 
+    visited BOOLEAN NOT NULL DEFAULT FALSE, 
+    created_at TIMESTAMP DEFAULT NOW(), 
+    modified_at TIMESTAMP DEFAULT NULL
 ); 
 
 CREATE TABLE journi_planner (
@@ -27,8 +27,8 @@ CREATE TABLE journi_planner (
     date_to TIMESTAMP, 
     accommodation JSON, 
     trip_type VARCHAR (255), 
-    created_at TIMESTAMP, 
-    modified_at TIMESTAMP
+    created_at TIMESTAMP DEFAULT NOW(),  
+    modified_at TIMESTAMP DEFAULT NULL
 ); 
 
 
@@ -42,8 +42,8 @@ CREATE TABLE journi_plans (
     location_type VARCHAR (255) NOT NULL, 
     trip_duration INT, 
     planned_visit_day INT, 
-    created_at TIMESTAMP, 
-    modified_at TIMESTAMP
+    created_at TIMESTAMP DEFAULT NOW(),  
+    modified_at TIMESTAMP DEFAULT NULL
 );
 
 CREATE TABLE journal_entries (
@@ -54,6 +54,6 @@ CREATE TABLE journal_entries (
     entry_text TEXT,
     entry_location JSON, 
     media TEXT,
-    created_at TIMESTAMP, 
-    modified_at TIMESTAMP
+    created_at TIMESTAMP DEFAULT NOW(), 
+    modified_at TIMESTAMP DEFAULT NULL
 ); 

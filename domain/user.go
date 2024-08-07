@@ -1,13 +1,13 @@
 package domain
 
 type User struct {
-	ID string `json:"id"`
+	ID        string `json:"id"`
 	FirstName string `json:"firstname"`
-	LastName string `json:"lastname"`
-	Email string `json:"email"` 
+	LastName  string `json:"lastname"`
+	Email     string `json:"email"`
 }
 
-type UserService interface { 
+type UserService interface {
 	ListUsers() ([]User, error)
 }
 

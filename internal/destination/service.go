@@ -14,16 +14,16 @@ func NewService(store domain.DestinationStore) domain.DestinationService {
 
 func (s *svc) ListDestinations() ([]domain.Destination, error) {
 	return s.store.ListDestinations()
-} 
+}
 
-func (s *svc) GetDestinationByID(destinationID string) (domain.Destination, error) {
+func (s *svc) GetDestinationByID(destinationID int) (domain.Destination, error) {
 	return s.store.GetDestinationByID(destinationID)
 }
 
-func (s *svc) AddDestination(destination domain.Destination) (error) {
+func (s *svc) AddDestination(destination domain.Destination) (domain.Destination, error) {
 	return s.store.AddDestination(destination)
-} 
+}
 
-func (s *svc) DeleteDestination(destinationID string) ([]domain.Destination, error) {
+func (s *svc) DeleteDestination(destinationID int) ([]domain.Destination, error) {
 	return s.store.DeleteDestination(destinationID)
-} 
+}

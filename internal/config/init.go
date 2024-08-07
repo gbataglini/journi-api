@@ -7,8 +7,11 @@ import (
 )
 
 type Config struct {
-	DbHost string
-	DbPassword string
+	DbHost     string `default:"db"`
+	DbPassword string `default:"dev"`
+	DbName     string `default:"journi"`
+	DbUser     string `default:"postgres"`
+	DbPort     int    `default:"5432"`
 }
 
 var c Config
@@ -16,9 +19,8 @@ var c Config
 var once sync.Once
 
 func Get() Config {
-	once.Do(func (){ 
+	once.Do(func() {
 		envconfig.MustProcess("journiapi", &c)
 	})
 	return c
 }
-

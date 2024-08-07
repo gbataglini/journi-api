@@ -1,13 +1,13 @@
 package user
 
-import "github.com/gbataglini/journi-backend/domain" 
+import "github.com/gbataglini/journi-backend/domain"
 
 type svc struct {
 	store domain.UserStore
 }
 
 func NewService(store domain.UserStore) domain.UserService {
-	return &svc {
+	return &svc{
 		store: store,
 	}
 }

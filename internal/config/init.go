@@ -7,11 +7,12 @@ import (
 )
 
 type Config struct {
-	DbHost     string `default:"db"`
-	DbPassword string `default:"dev"`
-	DbName     string `default:"journi"`
-	DbUser     string `default:"postgres"`
-	DbPort     int    `default:"5432"`
+	DbHost       string `default:"db"`
+	DbPassword   string `default:"dev"`
+	DbName       string `default:"journi"`
+	DbUser       string `default:"postgres"`
+	DbPort       int    `default:"5432"`
+	GoogleApiKey string
 }
 
 var c Config

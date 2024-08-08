@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/gbataglini/journi-backend/domain"
+	"github.com/gbataglini/journi-api/domain"
 )
 
 type rest struct {

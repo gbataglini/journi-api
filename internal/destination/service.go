@@ -1,14 +1,21 @@
 package destination
 
-import "github.com/gbataglini/journi-backend/domain"
+import (
+	"context"
+
+	"github.com/gbataglini/journi-api/domain"
+	"googlemaps.github.io/maps"
+)
 
 type svc struct {
-	store domain.DestinationStore
+	store        domain.DestinationStore
+	googleClient *maps.Client
 }
 
-func NewService(store domain.DestinationStore) domain.DestinationService {
+func NewService(store domain.DestinationStore, googleClient *maps.Client) domain.DestinationService {
 	return &svc{
-		store: store,
+		store:        store,
+		googleClient: googleClient,
 	}
 }
 
@@ -26,4 +33,15 @@ func (s *svc) AddDestination(destination domain.Destination) (domain.Destination
 
 func (s *svc) DeleteDestination(destinationID int) ([]domain.Destination, error) {
 	return s.store.DeleteDestination(destinationID)
+}
+
+func (s *svc) GooglePlacesSearchSuggestions(input string) (maps.AutocompleteResponse, error) {
+	resp, err := s.googleClient.PlaceAutocomplete(context.Background(), &maps.PlaceAutocompleteRequest{
+		Input: input,
+		Types: "(cities)",
+	})
+	if err != nil {
+		return maps.AutocompleteResponse{}, err
+	}
+	return resp, nil
 }

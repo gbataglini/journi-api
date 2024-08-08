@@ -1,6 +1,10 @@
 package domain
 
-import "time"
+import (
+	"time"
+
+	"googlemaps.github.io/maps"
+)
 
 type Destination struct {
 	ID         int        `json:"id" db:"id"`
@@ -12,13 +16,22 @@ type Destination struct {
 	ModifiedAt *time.Time `json:"modifiedAt" db:"modified_at"`
 }
 
-type DestinationService interface {
+type DestinationReaderWriter interface {
 	ListDestinations() ([]Destination, error)
 	GetDestinationByID(destinationID int) (Destination, error)
 	AddDestination(destination Destination) (Destination, error)
 	DeleteDestination(destinationID int) ([]Destination, error)
 }
 
+type GoogleMapsService interface {
+	GooglePlacesSearchSuggestions(input string) (maps.AutocompleteResponse, error)
+}
+
+type DestinationService interface {
+	DestinationReaderWriter
+	GoogleMapsService
+}
+
 type DestinationStore interface {
-	DestinationService
+	DestinationReaderWriter
 }

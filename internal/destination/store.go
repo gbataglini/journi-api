@@ -3,7 +3,7 @@ package destination
 import (
 	"fmt"
 
-	"github.com/gbataglini/journi-backend/domain"
+	"github.com/gbataglini/journi-api/domain"
 	"github.com/jmoiron/sqlx"
 )
 

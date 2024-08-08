@@ -1,6 +1,6 @@
 package user
 
-import "github.com/gbataglini/journi-backend/domain"
+import "github.com/gbataglini/journi-api/domain"
 
 type svc struct {
 	store domain.UserStore

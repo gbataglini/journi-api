@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gbataglini/journi-backend/domain"
+	"github.com/gbataglini/journi-api/domain"
 )
 
 type rest struct {
@@ -29,6 +29,7 @@ func (re *rest) Routes(s *http.ServeMux) {
 	s.HandleFunc("GET /api/v1/destinations/{id}", re.getByID)
 	s.HandleFunc("POST /api/v1/destinations", re.create)
 	s.HandleFunc("DELETE /api/v1/destinations/{id}", re.delete)
+	s.HandleFunc("GET /api/v1/destinations/autocomplete", re.placesAutocompleteAPI)
 }
 
 func (re *rest) listDestinations(w http.ResponseWriter, r *http.Request) {
@@ -46,6 +47,7 @@ func (re *rest) create(w http.ResponseWriter, r *http.Request) {
 		re.onError(w, err)
 		return
 	}
+
 	newDestination, err := re.svc.AddDestination(newDestination)
 	if err != nil {
 		re.onError(w, err)
@@ -82,4 +84,15 @@ func (re *rest) getByID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(selectedDest)
+}
+
+func (re *rest) placesAutocompleteAPI(w http.ResponseWriter, r *http.Request) {
+	searchParam := r.URL.Query().Get("searchParam")
+	response, err := re.svc.GooglePlacesSearchSuggestions(searchParam)
+
+	if err != nil {
+		re.onError(w, err)
+		return
+	}
+	json.NewEncoder(w).Encode(response)
 }

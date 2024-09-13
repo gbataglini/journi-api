@@ -11,6 +11,7 @@ CREATE TABLE user_details (
 
 CREATE TABLE destinations (
     id SERIAL PRIMARY KEY NOT NULL, 
+    googlemaps_id INT NOT NULL, 
     user_id INT NOT NULL REFERENCES user_details (id), 
     city VARCHAR (255) NOT NULL, 
     country VARCHAR (255) NOT NULL,
@@ -21,7 +22,7 @@ CREATE TABLE destinations (
 
 CREATE TABLE journi_planner (
     id SERIAL PRIMARY KEY NOT NULL, 
-    destination_id INT NOT NULL REFERENCES destinations (id),
+    destination_id INT NOT NULL REFERENCES destinations (googlemaps_id),
     user_id INT NOT NULL REFERENCES user_details (id), 
     date_from TIMESTAMP, 
     date_to TIMESTAMP, 

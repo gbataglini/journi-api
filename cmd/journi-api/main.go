@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"github.com/gbataglini/journi-api/domain"
+	"github.com/gorilla/handlers"
+
 	"github.com/gbataglini/journi-api/internal/config"
 	"github.com/gbataglini/journi-api/internal/destination"
 	"github.com/gbataglini/journi-api/internal/user"
@@ -26,6 +28,7 @@ func run() error {
 	mux := http.NewServeMux()
 
 	googleClient, err := maps.NewClient(maps.WithAPIKey(cfg.GoogleApiKey))
+
 	if err != nil {
 		return fmt.Errorf("failed to init google client: %w", err)
 	}
@@ -56,8 +59,11 @@ func run() error {
 	}
 
 	return (&http.Server{
-		Addr:        ":8080",
-		Handler:     mux,
+		Addr: ":8080",
+		Handler: handlers.CORS(
+			handlers.AllowedOrigins([]string{"*"}),
+			handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"}),
+		)(mux),
 		ReadTimeout: 10 * time.Second,
 	}).ListenAndServe()
 }

@@ -24,9 +24,9 @@ func NewStore(db *sqlx.DB) domain.DestinationStore {
 	}
 }
 
-func (s *store) ListDestinations() ([]domain.Destination, error) {
+func (s *store) ListDestinations(userID int) ([]domain.Destination, error) {
 	var dests []domain.Destination
-	err := s.db.Select(&dests, "SELECT * FROM destinations")
+	err := s.db.Select(&dests, "SELECT * FROM destinations WHERE user_id=$1", userID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query all destinations: %w", err)
 	}

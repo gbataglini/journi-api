@@ -1,6 +1,8 @@
 package domain
 
-import "net/http"
+import (
+	"net/http"
+)
 
 type Router interface {
 	Routes(*http.ServeMux)

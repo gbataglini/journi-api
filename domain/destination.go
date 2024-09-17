@@ -2,19 +2,37 @@ package domain
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"googlemaps.github.io/maps"
 )
 
 type Destination struct {
-	ID         int        `json:"id" db:"id"`
-	UserId     int        `json:"userId" db:"user_id"`
-	City       string     `json:"city" db:"city"`
-	Country    string     `json:"country" db:"country"`
-	Visited    string     `json:"visited" db:"visited"`
-	CreatedAt  time.Time  `json:"createdAt" db:"created_at"`
-	ModifiedAt *time.Time `json:"modifiedAt" db:"modified_at"`
+	ID              int        `json:"id" db:"id"`
+	GoogleMapsId    string     `json:"googleMapsId" db:"googlemaps_id"`
+	UserId          int        `json:"userId" db:"user_id"`
+	City            string     `json:"city" db:"city"`
+	Country         string     `json:"country" db:"country"`
+	Visited         bool       `json:"visited" db:"visited"`
+	DestinationType string     `json:"destinationType" db:"destination_type"`
+	CreatedAt       time.Time  `json:"createdAt" db:"created_at"`
+	ModifiedAt      *time.Time `json:"modifiedAt" db:"modified_at"`
+}
+
+func (d Destination) Validate() error {
+	var errs error
+	if d.ID != 0 {
+		errs = errors.Join(errs, errors.New("id cannot be set"))
+	}
+	if d.GoogleMapsId == "" {
+		errs = errors.Join(errs, errors.New("googleMapsId required"))
+
+	}
+	if !d.CreatedAt.IsZero() {
+		errs = errors.Join(errs, errors.New("createdAt cannot be set"))
+	}
+	return errs
 }
 
 type DestinationReaderWriter interface {

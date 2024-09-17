@@ -58,12 +58,23 @@ func run() error {
 		router.Routes(mux)
 	}
 
+	h := handlers.CORS(
+		handlers.AllowedOrigins([]string{"http://localhost:3000"}),
+		handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"}),
+		handlers.AllowedHeaders([]string{
+			"Accept",
+			"Accept-Language",
+			"Content-Language",
+			"Content-Type",
+			"Access-Control-Allow-Origin",
+			"Access-Control-Allow-Credentials",
+		}),
+	)(mux)
+	h = handlers.RecoveryHandler()(h)
+
 	return (&http.Server{
-		Addr: ":8080",
-		Handler: handlers.CORS(
-			handlers.AllowedOrigins([]string{"*"}),
-			handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"}),
-		)(mux),
+		Addr:        ":8080",
+		Handler:     h,
 		ReadTimeout: 10 * time.Second,
 	}).ListenAndServe()
 }

@@ -11,11 +11,12 @@ CREATE TABLE user_details (
 
 CREATE TABLE destinations (
     id SERIAL PRIMARY KEY NOT NULL, 
-    googlemaps_id INT NOT NULL, 
+    googlemaps_id VARCHAR (255) NOT NULL, 
     user_id INT NOT NULL REFERENCES user_details (id), 
     city VARCHAR (255) NOT NULL, 
     country VARCHAR (255) NOT NULL,
     visited BOOLEAN NOT NULL DEFAULT FALSE, 
+    destination_type VARCHAR (255) NOT NULL, 
     created_at TIMESTAMP DEFAULT NOW(), 
     modified_at TIMESTAMP DEFAULT NULL
 ); 

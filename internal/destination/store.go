@@ -19,7 +19,7 @@ func NewStore(db *sqlx.DB) domain.DestinationStore {
 			ID:      1,
 			City:    "Pompeii",
 			Country: "Italy",
-			Visited: "false",
+			Visited: false,
 		}},
 	}
 }
@@ -44,12 +44,12 @@ func (s *store) GetDestinationByID(destinationID int) (domain.Destination, error
 
 func (s *store) AddDestination(destination domain.Destination) (domain.Destination, error) {
 	insertStatement :=
-		`INSERT INTO destinations (user_id, city, country, visited)
-	VALUES ($1, $2, $3, $4)
+		`INSERT INTO destinations (user_id, city, country, visited, destination_type, googlemaps_id)
+	VALUES ($1, $2, $3, $4, $5, $6)
 	RETURNING id
 	`
 	id := 0
-	err := s.db.QueryRow(insertStatement, destination.UserId, destination.City, destination.Country, destination.Visited).Scan(&id)
+	err := s.db.QueryRow(insertStatement, destination.UserId, destination.City, destination.Country, destination.Visited, destination.DestinationType, destination.GoogleMapsId).Scan(&id)
 	if err != nil {
 		return domain.Destination{}, fmt.Errorf("failed to add destination: %w", err)
 	}

@@ -25,31 +25,52 @@ func NewStore(db *sqlx.DB) domain.DestinationStore {
 }
 
 func (s *store) ListDestinations(userID int) ([]domain.Destination, error) {
-	var dests []domain.Destination
+	var dests []domain.DestinationDAO
+	var formattedDests []domain.Destination
 	err := s.db.Select(&dests, "SELECT * FROM destinations WHERE user_id=$1", userID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query all destinations: %w", err)
+	}
+
+	for _, dest := range dests {
+		formattedDests = append(formattedDests, dest.ToDestination())
+	}
+
+	return formattedDests, nil
+}
+
+func (s *store) ListCountries(userID int) ([]domain.Country, error) {
+	var dests []domain.Country
+	err := s.db.Select(&dests,
+		`SELECT country
+		 ,COUNT(CASE WHEN visited = TRUE THEN 1 END) AS visited
+		 ,ARRAY_AGG(DISTINCT destination_type) AS destination_type
+		 FROM destinations
+		 GROUP BY country`)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query all countries: %w", err)
 	}
 	return dests, nil
 }
 
 func (s *store) GetDestinationByID(destinationID int) (domain.Destination, error) {
-	var destinationDetails domain.Destination
-	err := s.db.Get(&destinationDetails, "SELECT * FROM destinations WHERE id=$1", destinationID)
+	var destDetails domain.DestinationDAO
+	err := s.db.Get(&destDetails, "SELECT * FROM destinations WHERE id=$1", destinationID)
 	if err != nil {
 		return domain.Destination{}, fmt.Errorf("failed to get destination: %w", err)
 	}
-	return destinationDetails, nil
+	return destDetails.ToDestination(),
+		nil
 }
 
 func (s *store) AddDestination(destination domain.Destination) (domain.Destination, error) {
 	insertStatement :=
-		`INSERT INTO destinations (user_id, city, country, visited, destination_type, googlemaps_id)
-	VALUES ($1, $2, $3, $4, $5, $6)
+		`INSERT INTO destinations (user_id, city, country, visited, destination_type, googlemaps_id, lat, lng)
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 	RETURNING id
 	`
 	id := 0
-	err := s.db.QueryRow(insertStatement, destination.UserId, destination.City, destination.Country, destination.Visited, destination.DestinationType, destination.GoogleMapsId).Scan(&id)
+	err := s.db.QueryRow(insertStatement, destination.UserId, destination.City, destination.Country, destination.Visited, destination.DestinationType, destination.GoogleMapsId, destination.Location.Lat, destination.Location.Lng).Scan(&id)
 	if err != nil {
 		return domain.Destination{}, fmt.Errorf("failed to add destination: %w", err)
 	}

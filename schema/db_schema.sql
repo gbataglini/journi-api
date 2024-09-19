@@ -17,6 +17,8 @@ CREATE TABLE destinations (
     country VARCHAR (255) NOT NULL,
     visited BOOLEAN NOT NULL DEFAULT FALSE, 
     destination_type VARCHAR (255) NOT NULL, 
+    lat float, 
+    lng float, 
     created_at TIMESTAMP DEFAULT NOW(), 
     modified_at TIMESTAMP DEFAULT NULL
 ); 

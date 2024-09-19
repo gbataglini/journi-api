@@ -5,8 +5,20 @@ import (
 	"errors"
 	"time"
 
+	"github.com/lib/pq"
 	"googlemaps.github.io/maps"
 )
+
+type Country struct {
+	Country         string         `json:"country" db:"country"`
+	DestinationType pq.StringArray `json:"destinationType" db:"destination_type"`
+	Visited         bool           `json:"visited" db:"visited"`
+}
+
+type Location struct {
+	Lat float64 `json:"lat" db:"lat"`
+	Lng float64 `json:"lng" db:"lng"`
+}
 
 type Destination struct {
 	ID              int        `json:"id" db:"id"`
@@ -16,8 +28,41 @@ type Destination struct {
 	Country         string     `json:"country" db:"country"`
 	Visited         bool       `json:"visited" db:"visited"`
 	DestinationType string     `json:"destinationType" db:"destination_type"`
+	Location        Location   `json:"location"`
 	CreatedAt       time.Time  `json:"createdAt" db:"created_at"`
 	ModifiedAt      *time.Time `json:"modifiedAt" db:"modified_at"`
+}
+
+type DestinationDAO struct {
+	ID              int        `db:"id"`
+	GoogleMapsId    string     `db:"googlemaps_id"`
+	UserId          int        `db:"user_id"`
+	City            string     `db:"city"`
+	Country         string     `db:"country"`
+	Visited         bool       `db:"visited"`
+	DestinationType string     `db:"destination_type"`
+	CreatedAt       time.Time  `db:"created_at"`
+	ModifiedAt      *time.Time `db:"modified_at"`
+	Lat             float64    `db:"lat"`
+	Lng             float64    `db:"lng"`
+}
+
+func (d DestinationDAO) ToDestination() Destination {
+	return Destination{
+		ID:              d.ID,
+		GoogleMapsId:    d.GoogleMapsId,
+		UserId:          d.UserId,
+		City:            d.City,
+		Country:         d.Country,
+		Visited:         d.Visited,
+		DestinationType: d.DestinationType,
+		CreatedAt:       d.CreatedAt,
+		ModifiedAt:      d.ModifiedAt,
+		Location: Location{
+			Lat: d.Lat,
+			Lng: d.Lng,
+		},
+	}
 }
 
 func (d Destination) Validate() error {
@@ -37,6 +82,7 @@ func (d Destination) Validate() error {
 
 type DestinationReaderWriter interface {
 	ListDestinations(userID int) ([]Destination, error)
+	ListCountries(userID int) ([]Country, error)
 	GetDestinationByID(destinationID int) (Destination, error)
 	AddDestination(destination Destination) (Destination, error)
 	DeleteDestination(destinationID int) ([]Destination, error)

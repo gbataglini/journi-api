@@ -37,6 +37,9 @@ func (re *rest) Routes(s *http.ServeMux) {
 	s.HandleFunc("GET /api/v1/{userID}/destinations", re.listDestinations)
 	s.HandleFunc("GET /api/v1/{userID}/destinations/", re.listDestinations)
 
+	s.HandleFunc("GET /api/v1/{userID}/countries", re.listCountries)
+	s.HandleFunc("GET /api/v1/{userID}/countries/", re.listCountries)
+
 	s.HandleFunc("GET /api/v1/{userID}/destinations/{id}", re.getByID)
 	s.HandleFunc("GET /api/v1/{userID}/destinations/{id}/", re.getByID)
 
@@ -60,6 +63,23 @@ func (re *rest) listDestinations(w http.ResponseWriter, r *http.Request) {
 		re.onError(w, err)
 		return
 	}
+	json.NewEncoder(w).Encode(dests)
+}
+
+func (re *rest) listCountries(w http.ResponseWriter, r *http.Request) {
+	userID, err :=
+		strconv.Atoi(r.PathValue("userID"))
+
+	if err != nil {
+		re.onError(w, err)
+		return
+	}
+	dests, err := re.svc.ListCountries(userID)
+	if err != nil {
+		re.onError(w, err)
+		return
+	}
+
 	json.NewEncoder(w).Encode(dests)
 }
 

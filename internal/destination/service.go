@@ -24,6 +24,10 @@ func (s *svc) ListDestinations(userID int) ([]domain.Destination, error) {
 	return s.store.ListDestinations(userID)
 }
 
+func (s *svc) ListCountries(userID int) ([]domain.Country, error) {
+	return s.store.ListCountries(userID)
+}
+
 func (s *svc) GetDestinationByID(destinationID int) (domain.Destination, error) {
 	return s.store.GetDestinationByID(destinationID)
 }
@@ -51,7 +55,6 @@ func (s *svc) GooglePlacesGetDetails(input string) (maps.PlaceDetailsResult, err
 	resp, err := s.googleClient.PlaceDetails(context.Background(), &maps.PlaceDetailsRequest{
 		PlaceID: input,
 	})
-
 	if err != nil {
 		return maps.PlaceDetailsResult{}, err
 	}

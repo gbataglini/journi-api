@@ -49,6 +49,9 @@ func (re *rest) Routes(s *http.ServeMux) {
 	s.HandleFunc("DELETE /api/v1/{userID}/destinations/{id}", re.delete)
 	s.HandleFunc("DELETE /api/v1/{userID}/destinations/{id}/", re.delete)
 
+	s.HandleFunc("GET api/v1/destinations/weather/", re.owmGetPlaceWeather)
+	s.HandleFunc("GET api/v1/destinations/weather", re.owmGetPlaceWeather)
+
 }
 
 func (re *rest) listDestinations(w http.ResponseWriter, r *http.Request) {
@@ -160,6 +163,26 @@ func (re *rest) placesGetEstablishments(w http.ResponseWriter, r *http.Request) 
 	lat := r.URL.Query().Get("lat")
 	lng := r.URL.Query().Get("lng")
 	response, err := re.svc.GooglePlacesEstablishmentSearch(searchParam, lat, lng)
+
+	if err != nil {
+		re.onError(w, err)
+		return
+	}
+	json.NewEncoder(w).Encode(response)
+}
+
+func (re *rest) owmGetPlaceWeather(w http.ResponseWriter, r *http.Request) {
+	lat, err := strconv.ParseFloat(r.URL.Query().Get("lat"), 64)
+	if err != nil {
+		re.onError(w, err)
+		return
+	}
+	lng, err := strconv.ParseFloat(r.URL.Query().Get("lng"), 64)
+	if err != nil {
+		re.onError(w, err)
+		return
+	}
+	response, err := re.svc.OpenWeatherGetCurrentWeather(lat, lng)
 
 	if err != nil {
 		re.onError(w, err)

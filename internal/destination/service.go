@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 
+	owm "github.com/briandowns/openweathermap"
 	"github.com/gbataglini/journi-api/domain"
+	"github.com/gbataglini/journi-api/internal/config"
 	"googlemaps.github.io/maps"
 )
 
@@ -79,5 +81,17 @@ func (s *svc) GooglePlacesEstablishmentSearch(input string, lat string, lng stri
 	if err != nil {
 		return maps.AutocompleteResponse{}, err
 	}
+	return resp, nil
+}
+
+func (s *svc) OpenWeatherGetCurrentWeather(lat float64, lng float64) (*owm.CurrentWeatherData, error) {
+	cfg := config.Get()
+	resp, err := owm.NewCurrent("C", "EN", cfg.OpenWeatherMapApiKey)
+	if err != nil {
+		return nil, fmt.Errorf("could not get location weather: %w", err)
+	}
+
+	resp.CurrentByCoordinates(&owm.Coordinates{Longitude: lng, Latitude: lat})
+
 	return resp, nil
 }

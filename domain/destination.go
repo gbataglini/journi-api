@@ -5,6 +5,7 @@ import (
 	"errors"
 	"time"
 
+	owm "github.com/briandowns/openweathermap"
 	"github.com/lib/pq"
 	"googlemaps.github.io/maps"
 )
@@ -99,9 +100,14 @@ type GoogleMapsService interface {
 	GooglePlacesGetDetails(input string) (maps.PlaceDetailsResult, error)
 }
 
+type OWMService interface {
+	OpenWeatherGetCurrentWeather(lat float64, lng float64) (*owm.CurrentWeatherData, error)
+}
+
 type DestinationService interface {
 	DestinationReaderWriter
 	GoogleMapsService
+	OWMService
 }
 
 type DestinationStore interface {

@@ -12,6 +12,7 @@ require (
 )
 
 require (
+	github.com/briandowns/openweathermap v0.20.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/google/uuid v1.1.1 // indirect

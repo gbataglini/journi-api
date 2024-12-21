@@ -24,11 +24,9 @@ func main() {
 
 func run() error {
 	cfg := config.Get()
-	fmt.Println(cfg)
 	mux := http.NewServeMux()
 
 	googleClient, err := maps.NewClient(maps.WithAPIKey(cfg.GoogleApiKey))
-
 	if err != nil {
 		return fmt.Errorf("failed to init google client: %w", err)
 	}

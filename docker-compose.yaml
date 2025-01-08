@@ -1,0 +1,13 @@
+services:
+  pocketbase:
+    container_name: pocketbase
+    image: cosmtrek/air
+    volumes:
+      - ./:/app
+    working_dir: /app
+    ports:
+      - 8090:8090
+    entrypoint:
+      - air
+      - -c
+      - cmd/journi-api/air.toml
